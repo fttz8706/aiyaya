@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="GBK"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+       default-autowire="byName">
+
+<bean id="mySqlDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+	<property name="driverClass" value="${mySql.jdbc.driver.class}" />
+	<property name="jdbcUrl" value="${mySql.jdbc.url}"></property>
+	<property name="user" value="${mySql.jdbc.username}"></property>
+	<property name="password" value="${mySql.jdbc.password}"></property>
+</bean>
+       
+</beans>

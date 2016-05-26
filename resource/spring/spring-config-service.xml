@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="GBK"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+       default-autowire="byName" >
+
+<bean id="myAction" class="com.aiyaya.struts.MyAction"/>
+<bean id='loginService' class="com.aiyaya.service.impl.LoginServiceImpl"/>
+<bean id="wareAction" class="com.aiyaya.struts.WareAction"/>
+<bean id="memberAction" class="com.aiyaya.struts.MemberAction" />
+<bean id="shopRecordAction" class="com.aiyaya.struts.ShopRecordAction" />
+
+</beans>

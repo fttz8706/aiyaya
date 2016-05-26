@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+        
+<struts>
+	
+	<package name="testPack" namespace='/' extends='struts-base'>
+		<action name="loginAction" class='myAction'>
+			<interceptor-ref name="myInterceptorStack"></interceptor-ref>
+			<result name="login">/login.jsp</result>
+			<result name="success">/success.jsp</result>
+		</action>
+		
+		<action name="wareAction" class="wareAction" method="doTask">
+			<result>/ware/addware.jsp</result>
+		</action>
+		
+		<action name="queryWareAction" class="wareAction" method="queryWare">
+			<result>/ware/queryware.jsp</result>
+		</action>
+		
+		<action name="deleteWareAction" class="wareAction" method="deleteWare">
+			<result>/ware/queryware.jsp</result>
+		</action>
+		
+		<action name="initEditWareAction" class="wareAction" method="initEditWare">
+			<result>/ware/editware.jsp</result>
+		</action>
+		
+		<action name="editWareAction" class="wareAction" method="editWare">
+			<result>/ware/editware.jsp</result>
+		</action>
+		
+		<action name="addMemberAction" class="memberAction" method="addMember">
+			<result>/member/addmember.jsp</result>
+		</action>
+		
+		<action name="initMemberQueryPage" class="memberAction" method="initPage">
+			<result>/member/querymember.jsp</result>
+		</action>
+		
+		<action name="queryMemberAction" class="memberAction" method="queryMember">
+			<result>/member/querymember.jsp</result>
+		</action>
+		
+		<action name="queryMemberActionForPagination" class="memberAction" method="queryMemberForPagination">
+			<result>/member/querymember.jsp</result>
+		</action>
+		
+		<action name="deleteMember" class="memberAction" method="deleteMember">
+			<result>/member/querymember.jsp</result>
+		</action>
+		
+		<action name="initAddShopRecord" class="shopRecordAction" method="initAddShopPage">
+			<result>/member/addshoprecord.jsp</result>
+		</action>
+		
+		<action name="addShopRecord" class="shopRecordAction" method="addShopRecord">
+			<result name="success" type="redirect">initShopPageAction.action?mrCardId=${userId}</result>
+			<result name="error">/member/addshoprecord.jsp</result>
+		</action>
+		
+		<action name="initShopPageAction" class="shopRecordAction" method="initShopPage">
+			<result>/member/shoprecords.jsp</result>
+		</action>
+		
+		<action name="deleteSellRecordAciton" class="shopRecordAction" method="deleteSellRecord">
+			<result name="success" type="redirect">initShopPageAction.action?mrCardId=${userId}</result>
+			<result name="error">/member/shoprecords.jsp</result>
+		</action>
+		
+	</package>
+
+</struts>

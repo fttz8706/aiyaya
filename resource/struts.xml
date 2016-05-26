@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+        
+
+<struts>
+	<constant name="struts.objectFactory" value="spring" /> <!-- 创建对象方式由spring容器管理-->
+	<constant name="struts.i18n.encoding" value="UTF-8"/>
+	<package name="struts-base" extends='struts-default'>
+		<interceptors>
+			<interceptor name="myInterceptor" class="com.aiyaya.struts.MyInterceptor"></interceptor>
+			<!--<interceptor name="loginInterceptor" class="com.yjm.struts.LoginInterceptor"></interceptor>-->
+			<interceptor-stack name="myInterceptorStack">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<interceptor-ref name="myInterceptor"></interceptor-ref>
+				<!-- <interceptor-ref name="loginInterceptor"></interceptor-ref> --> 
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="myInterceptorStack"></default-interceptor-ref>
+	</package>
+	
+	<include file="struts/struts-test.xml"></include>
+	
+</struts>

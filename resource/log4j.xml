@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='GBK' ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<param name="encoding" value="GBK" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%7r] %6p - %30.30c - %m \n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="DEBUG" /> 
+		</filter>
+	</appender>
+
+	<appender name="FILE-DEBUG" class="org.apache.log4j.FileAppender">
+		<param name="encoding" value="GBK" />
+		<param name="Append" value="false" />
+		<param name="file" value="D:/logs/aiyaya.com.cn/aiyaya-debug.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%7r] %6p - %30.30c - %m \n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="DEBUG" />
+		</filter>
+	</appender>
+
+	<appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="encoding" value="GBK" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="Append" value="true" />
+		<param name="file" value="D:/logs/aiyaya.com.cn/aiyaya-error.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%7r] %6p - %30.30c - %m \n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="DEBUG" />
+		</filter>
+	</appender>
+	
+	<appender name="FILE-EXCEPTION" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="encoding" value="GBK" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="Append" value="true" />
+		<param name="file" value="D:/logs/aiyaya.com.cn/aiyaya-fileException.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%7r] %6p - %30.30c - %m \n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="DEBUG" />
+		</filter>
+	</appender>
+
+	<appender name="FILE-SQL" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="encoding" value="GBK" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="file" value="D:/logs/aiyaya.com.cn/aiyaya-sql.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%m \n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="DEBUG" />
+		</filter>
+	</appender>
+
+	<category name="java.sql" additivity="false">
+		<priority value="error" />
+		<appender-ref ref="FILE-SQL" />
+		<appender-ref ref="CONSOLE" />
+	</category>
+
+	<category name="com.ibatis" additivity="false">
+		<priority value="error" />
+		<appender-ref ref="FILE-SQL" />
+		<appender-ref ref="CONSOLE" />
+	</category>
+
+	<category name="com.aiyaya" additivity="false">
+		<priority value="error" />
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="FILE" />
+	</category>
+
+	<root>
+		<priority value="error" />
+		<appender-ref ref="FILE" />
+		<appender-ref ref="FILE-SQL" />
+		<appender-ref ref="CONSOLE" />
+	</root>
+	
+</log4j:configuration>

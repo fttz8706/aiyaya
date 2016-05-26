@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="aiyaya">
+	<typeAlias alias="userinfo" type="com.aiyaya.domain.UserInfo"></typeAlias>
+	<typeAlias alias="ware" type="com.aiyaya.domain.Ware"></typeAlias>
+	<typeAlias alias="member" type="com.aiyaya.domain.Member"/>
+	<typeAlias alias="sellRecord" type="com.aiyaya.domain.SellRecord"/>
+	<typeAlias alias="point" type="com.aiyaya.domain.Point"/>
+	<typeAlias alias="pointDetail" type="com.aiyaya.domain.PointDetail"/>
+	
+	<resultMap class="point" id="pointmap">
+		<result property="pId" column="pid" jdbcType="INTEGER"/>
+		<result property="mrCardId" column="mrCardId" jdbcType="VARCHAR"/>
+		<result property="totalPoint" column="totalpoint" jdbcType="INTEGER"/>
+	</resultMap>
+	<resultMap class="pointDetail" id="pointdetailmap">
+		<result property="pId" column="pid" jdbcType="INTEGER"/>
+		<result property="exchangePoint" column="exchangepoint" jdbcType="INTEGER"/>
+		<result property="exchangeDate" column="exchangedate" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	<resultMap class="ware" id="waremap">
+		<result property="skuId" column="skuId" jdbcType="VARCHAR"/>
+		<result property="wareName" column="wareName" jdbcType="VARCHAR"/>
+		<result property="price" column="price" jdbcType="DECIMAL"/>
+		<result property="remark" column="remark" jdbcType="VARCHAR"/>
+	</resultMap>
+	<resultMap class="member" id="memberMap">
+		<result property="mrCardId" column="mrCardId" jdbcType="VARCHAR"/>
+		<result property="name" column="name" jdbcType="VARCHAR"/>
+		<result property="phone" column="phone" jdbcType="DECIMAL"/>
+		<result property="grade" column="grade" jdbcType="VARCHAR"/>
+		<result property="sex" column="sex" jdbcType="VARCHAR"/>
+		<result property="birthday" column="birthday" jdbcType="TIMESTAMP"/>
+		<result property="skinType" column="skinType" jdbcType="VARCHAR"/>
+		<result property="qq" column="qq" jdbcType="VARCHAR"/>
+		<result property="email" column="email" jdbcType="VARCHAR"/>
+		<result property="recommender" column="recommender" jdbcType="VARCHAR"/>
+		<result property="recommenderPhone" column="recommenderPhone" jdbcType="DECIMAL"/>
+		<result property="suggest" column="suggest" jdbcType="VARCHAR"/>
+		<result property="remark" column="remark" jdbcType="VARCHAR"/>
+		<result property="yn" column="yn" jdbcType="DECIMAL"/>
+	</resultMap>
+	
+	<resultMap class="sellRecord" id="sellRecordMap">
+		<result property="sId" column="sid" jdbcType="DECIMAL"/>
+		<result property="mrCardId" column="mrCardId" jdbcType="VARCHAR"/>
+		<result property="skuId" column="wareId" jdbcType="VARCHAR"/>
+		<result property="wareName" column="wareName" jdbcType="VARCHAR"/>
+		<result property="price" column="price" jdbcType="DECIMAL"/>
+		<result property="num" column="num" jdbcType="DECIMAL"/>
+		<result property="totalMoney" column="totalMoney" jdbcType="DECIMAL"/>
+		<result property="date" column="shopDate" jdbcType="TIMESTAMP"/>
+		<result property="remark" column="remark" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<insert id="insertPoint" parameterClass="point" timeout="5">
+		<selectKey keyProperty="pId" resultClass="int" type="post">
+			select @@identity
+		</selectKey>
+		insert into point(mrcardid, totalpoint, created, modified)
+		values(#mrCardId#, #totalPoint#, now(), now())
+	</insert>
+	
+	<update id="insertPointDetail" parameterClass="pointDetail" timeout="5">
+		insert into pointdetail
+		values(#pId#, #exchangePoint#, now())
+	</update>
+	
+	<update id="updatePoint" parameterClass="java.util.HashMap" timeout="5">
+		update point
+		set totalpoint = totalpoint + $totalPoint$
+		where mrcardid = '$mrCardId$'
+	</update>
+	
+	<select id="queryPoint" parameterClass="String" resultMap="pointmap" timeout="5">
+		select pid, mrcardid, totalpoint
+		from point
+		where mrcardid = #mrCardId#
+	</select>
+	
+	<select id="queryPointDetail" parameterClass="int" resultMap="pointdetailmap" timeout="5">
+		select pid, exchangepoint, exchangedate
+		from pointdetail
+		where pid = #pId#
+	</select>
+	
+	<select id="queryPasswordByUsername" parameterClass="String" resultClass="String" timeout="5">
+		select password 
+		from user 
+		where username=#username:VARCHAR#
+	</select>
+	
+	<update id="insertWare" parameterClass="ware" timeout="5">
+		insert into ware
+		(
+			skuId, wareName, price, remark, created, modified
+		)
+		values
+		(
+			#skuId#, #wareName#, #price#, #remark#, now(), now()
+		)
+	</update>
+	
+	<update id="insertSellRecord" parameterClass="sellRecord" timeout="5">
+		insert into sellrecord
+		(
+			mrCardId, wareId, wareName, price, num, totalMoney, remark, created, modified, shopDate, yn
+		)
+		values
+		(
+			#mrCardId#, #skuId#, #wareName#, #price#, #num#, #totalMoney#, #remark#, now(), now(), #date#, 1
+		)
+	</update>
+	
+	<select id="querySellRecordById" parameterClass="String" resultMap="sellRecordMap" timeout="5">
+		select sid, mrCardId, wareId, wareName, price, num, totalMoney, remark, shopDate
+		from sellrecord
+		where mrCardId=#mrCardId# and yn=1
+		order by shopdate desc
+	</select>
+	
+	<update id="deleteSellRecord" parameterClass="String" timeout="5">
+		update sellrecord
+		set yn=0, modified=now()
+		where sid=#sId#
+	</update>
+	
+	<select id="queryWareInfo" parameterClass="ware" resultMap="waremap" timeout="5">
+		select skuId, wareName, price, remark
+		from ware
+		<dynamic prepend="where">
+			<isNotEmpty property="skuId" prepend="and">
+				skuId=#skuId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty property="wareName" prepend="and">
+				wareName=#wareName:VARCHAR#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<update id="deleteWare" parameterClass="java.lang.String" timeout="5">
+		delete
+		from ware
+		where skuId=#skuId:VARCHAR#
+	</update>
+	
+	<update id="updateWare" parameterClass="ware" timeout="5">
+		update ware
+		set wareName=#wareName#, price=#price#, remark=#remark#, modified=now()
+		where skuId=#skuId:VARCHAR#
+	</update>
+	
+	<update id="addMember" parameterClass="member" timeout="5">
+		insert into member
+		(
+			mrCardId, name, grade, sex,
+			birthday, skinType, qq, email, recommender,
+			suggest, remark, created, modified, yn
+			<dynamic prepend=",">
+				<isNotEmpty prepend="," property="phone">phone</isNotEmpty>
+				<isNotEmpty prepend="," property="recommenderPhone">recommenderPhone</isNotEmpty>
+			</dynamic>
+		)
+		values
+		(
+			#mrCardId#, #name#, #grade#, #sex#,
+			#birthday#, #skinType#, #qq#, #email#, #recommender#,
+			#suggest#, #remark#, now(), now(), 1
+			<dynamic prepend=",">
+				<isNotEmpty prepend="," property="phone">
+					#phone#
+				</isNotEmpty>
+				<isNotEmpty prepend="," property="recommenderPhone">
+					#recommenderPhone#
+				</isNotEmpty>
+			</dynamic>
+		)
+	</update>
+	
+	<select id="queryMemberInfo" parameterClass="member" resultMap="memberMap" timeout="5">
+		select mrCardId, name, phone, sex, skinType, birthday, grade, qq, email, recommender, recommenderPhone, suggest, remark, yn
+		from member
+		<dynamic prepend="where">
+			<isNotEmpty property="mrCardId" prepend="and">
+				mrCardId like '%$mrCardId$%'
+			</isNotEmpty>
+			<isNotEmpty property="name" prepend="and">
+				name like '%$name$%'
+			</isNotEmpty>
+			<isNotEmpty property="phone" prepend="and">
+				phone like '%$phone$%'
+			</isNotEmpty>
+			<isNotEmpty property="yn" prepend="and">
+				yn=#yn:DECIMAL#
+			</isNotEmpty>
+		</dynamic>
+		limit #beginIdex#,#pageSize#
+	</select>
+	
+	<select id="queryMemberInfoById" parameterClass="String" resultClass="member" timeout="5">
+		select mrCardId, name, phone, sex, skinType, birthday, grade, qq, email, recommender, recommenderPhone, suggest, remark, yn
+		from member
+		where mrCardId = #mrCardId#
+	</select>
+	
+	<select id="queryMemberCount" parameterClass="member" resultClass="int" timeout="5">
+		select count(1)
+		from member
+		<dynamic prepend="where">
+			<isNotEmpty property="mrCardId" prepend="and">
+				mrCardId like '%$mrCardId$%'
+			</isNotEmpty>
+			<isNotEmpty property="name" prepend="and">
+				name like '%$name$%'
+			</isNotEmpty>
+			<isNotEmpty property="phone" prepend="and">
+				phone like '%$phone$%'
+			</isNotEmpty>
+			<isNotEmpty property="yn" prepend="and">
+				yn=#yn:DECIMAL#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	
+	<update id="deleteMember" parameterClass="java.lang.String" timeout="5">
+		update member
+		set yn=0
+		where mrCardId = #mrCardId#
+	</update>
+	
+	<select id="queryTotalPoint" parameterClass="java.lang.String" resultClass="int" timeout="5">
+		select sum(totalmoney)
+		from  sellrecord
+		where mrCardId=#mrCardId# and yn=1
+	</select>
+	
+</sqlMap>
